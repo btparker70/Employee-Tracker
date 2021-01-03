@@ -1,0 +1,24 @@
+-- Insert departments into the department table
+INSERT INTO departments (name)
+VALUES ("Sales"), ("Engineering"), ("Legal"), ("Finance");
+
+-- Insert departments into the department table
+INSERT INTO roles (title, salary, department_id)
+VALUES ("Lead Salesperson", 80000, 1), 
+    ("Junior Salesperson", 50000, 1),
+    ("Senior Software Engineer", 150000, 2),
+    ("Junior Software Engineer", 80000, 2), 
+    ("Lawyer", 140000, 3),
+    ("Paralegal", 110000, 3), 
+    ("Accountant", 100000, 4);
+
+-- Insert departments into the department table
+INSERT INTO employees (first_name, last_name, role_id, manager_id)
+VALUES ("Jack", "Sparrow", 1, null), 
+    ("Hector", "Barbosa", 2, 1), 
+    ("Elizabeth", "Swann", 3, null), 
+    ("Will", "Turner", 4, 3),
+    ("Davy", "Jones", 5, null), 
+    ("Tia", "Dalma", 6, 5),
+    ("Joshamee", "Gibs", 7, null), 
+    ("James", "Norington", 7, 7);
