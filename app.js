@@ -7,14 +7,14 @@ var cTable = require("console.table")
 var connection = mysql.createConnection({
     host: "localhost",
 
-    // Your port; if not 8800
-    port: 8800,
+    // Your port; if not 3306
+    port: 3306,
 
     // Your username
     user: "root",
 
     // Your password
-    password: "",
+    password: "3s#W1Df$0Hk%",
     database: "employees_db"
 });
 
@@ -32,7 +32,7 @@ function start() {
             name: "optionList",
             type: "list",
             message: "Would you like to view or add?",
-            choices: ["POST", "BID", "EXIT"]
+            choices: ["VIEW", "ADD", "EXIT"]
         })
         .then(function (answer) {
             // based on their answer, either call the bid or the post functions
@@ -73,12 +73,32 @@ function viewPrompt() {
         });
 }
 
-console.table([
-    {
-      name: 'foo',
-      age: 10
-    }, {
-      name: 'bar',
-      age: 20
-    }
-  ]);
+// View departments table
+function viewDepartments() {
+    connection.query("SELECT * FROM departments", function (err, results) {
+        if (err) throw err;
+        console.table(results)
+    })
+};
+
+// View roles table
+function viewRoles() {
+    connection.query("SELECT * FROM roles", function (err, results) {
+        if (err) throw err;
+        console.table(results)
+    })
+};
+
+// View employees table
+function viewEmployees() {
+    connection.query("SELECT * FROM employees", function (err, results) {
+        if (err) throw err;
+        console.table(results)
+    })
+};
+
+
+
+// Add to tables
+function addPrompt() { };
+
