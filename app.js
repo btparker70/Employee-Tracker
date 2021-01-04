@@ -25,14 +25,15 @@ connection.connect(function (err) {
     start();
 });
 
+//////// START ////////
 // Prompts the user for what action they should take
 function start() {
     inquirer
         .prompt({
             name: "optionList",
             type: "list",
-            message: "Would you like to view or add?",
-            choices: ["VIEW", "ADD", "EXIT"]
+            message: "Would you like to view, add or update?",
+            choices: ["VIEW", "ADD", "UPDATE", "EXIT"]
         })
         .then(function (answer) {
             // based on their answer, either call the bid or the post functions
@@ -41,13 +42,17 @@ function start() {
             }
             else if (answer.optionList === "ADD") {
                 addPrompt();
+            }
+            else if (answer.optionList === "UPDATE") {
+                updatePrompt();
             } else {
                 connection.end();
             }
         });
 }
 
-// Choose to view departments, roles, employees 
+//////// VIEW ////////
+// View departments, roles, employees 
 function viewPrompt() {
     inquirer
         .prompt({
@@ -97,8 +102,7 @@ function viewEmployees() {
     })
 };
 
-
-
+//////// ADD ////////
 // Add to tables
 function addPrompt() {
     inquirer
@@ -224,4 +228,226 @@ function addEmployees() {
                     start();
                 })
         })
+};
+
+//////// UPDATE ////////
+// Update tables
+function updatePrompt() {
+    inquirer
+        .prompt({
+            name: "updateList",
+            type: "list",
+            message: "Would you like to update departments, roles or employees?",
+            choices: ["DEPARTMENTS", "ROLES", "EMPLOYEES", "BACK"]
+        })
+        .then(function (answer) {
+            // based on their answer add to respective tables
+            if (answer.updateList === "DEPARTMENTS") {
+                updateDepartments();
+            }
+            else if (answer.updateList === "ROLES") {
+                updateRoles();
+            }
+            else if (answer.updateList === "EMPLOYEES") {
+                updateEmployees();
+            }
+            else {
+                start();
+            }
+        });
+};
+
+// Update departments table
+function updateDepartments() {
+    connection.query("SELECT * FROM departments", function (err, results) {
+        if (err) throw err;
+
+        // Choose which department to edit from list of all departments
+        inquirer
+            .prompt([
+                {
+                    name: "choice",
+                    type: "rawlist",
+                    choices: function () {
+                        var choiceArray = [];
+                        for (i = 0; i < results.length; i++) {
+                            choiceArray.push(results[i].name);
+                        }
+                        return choiceArray;
+                    },
+                    message: "Which department would you like to update?"
+                },
+                {
+                    name: "name",
+                    type: "input",
+                    message: "What would you like rename the department?"
+                }
+            ])
+            .then(function (answer) {
+                // Get the id of the chosen department
+                var chosenDeptartment;
+                for (var i = 0; i < results.length; i++) {
+                    if (results[i].name === answer.choice) {
+                        chosenDeptartment = results[i];
+                    }
+                }
+                // Update the table with the changes
+                connection.query("UPDATE departments SET ? WHERE ?",
+                    [
+                        {
+                            name: answer.name
+                        },
+                        {
+                            id: chosenDeptartment.id
+                        }
+                    ],
+                    function(err) {
+                        if (err) throw err;
+                        console.log("Department updated successfully!");
+                        start();
+                      }
+                );
+            })
+    })
+};
+
+// Update roles table
+function updateRoles() {
+    connection.query("SELECT * FROM roles", function (err, results) {
+        if (err) throw err;
+
+        // Choose which role to edit from list of all roles
+        inquirer
+            .prompt([
+                {
+                    name: "choice",
+                    type: "rawlist",
+                    choices: function () {
+                        var choiceArray = [];
+                        for (i = 0; i < results.length; i++) {
+                            choiceArray.push(results[i].title);
+                        }
+                        return choiceArray;
+                    },
+                    message: "Which role would you like to update?"
+                },
+                {
+                    name: "title",
+                    type: "input",
+                    message: "What would you like rename the role?"
+                },
+                {
+                    name: "salary",
+                    type: "input",
+                    message: "What is the updated salary?"
+                },
+                {
+                    name: "departmentId",
+                    type: "input",
+                    message: "What is the updated department id?"
+                },
+            ])
+            .then(function (answer) {
+                // Get the id of the chosen role
+                var chosenRole;
+                for (var i = 0; i < results.length; i++) {
+                    if (results[i].title === answer.choice) {
+                        chosenRole = results[i];
+                    }
+                }
+                // Update the table with the changes
+                connection.query("UPDATE roles SET ? WHERE ?",
+                    [
+                        {
+                            title: answer.title,
+                            salary: answer.salary,
+                            department_id: answer.departmentId
+                        },
+                        {
+                            id: chosenRole.id
+                        }
+                    ],
+                    function(err) {
+                        if (err) throw err;
+                        console.log("Role updated successfully!");
+                        start();
+                      }
+                );
+            })
+    })
+};
+
+// Update employees table
+function updateEmployees() {
+    connection.query("SELECT * FROM employees", function (err, results) {
+        if (err) throw err;
+
+        // Choose which employee to edit from list of all employees
+        inquirer
+            .prompt([
+                {
+                    name: "choice",
+                    type: "rawlist",
+                    choices: function () {
+                        var choiceArray = [];
+                        for (i = 0; i < results.length; i++) {
+                            choiceArray.push(results[i].first_name + ' ' + results[i].last_name);
+                        }
+                        return choiceArray;
+                    },
+                    message: "Which employee would you like to update?"
+                },
+                {
+                    name: "firstName",
+                    type: "input",
+                    message: "What would you like rename their first name?"
+                },
+                {
+                    name: "lastName",
+                    type: "input",
+                    message: "What would you like rename their last name?"
+                },
+                {
+                    name: "roleId",
+                    type: "input",
+                    message: "What is their updated role id?"
+                },
+                {
+                    name: "managerId",
+                    type: "input",
+                    message: "What is their updated manager id?"
+                }
+            ])
+            .then(function (answer) {
+                // Get the id of the chosen employee
+                var chosenEmployee;
+                // Parse only first name from the prompt
+                var firstNameParse = answer.choice.split(" ", 1).toString();
+                for (var i = 0; i < results.length; i++) {
+                    if (results[i].first_name === firstNameParse) {
+                        chosenEmployee = results[i];
+                    }
+                }
+
+                // Update the table with the changes
+                connection.query("UPDATE employees SET ? WHERE ?",
+                    [
+                        {
+                            first_name: answer.firstName,
+                            last_name: answer.lastName,
+                            role_id: answer.roleId,
+                            manager_id: answer.managerId
+                        },
+                        {
+                            id: chosenEmployee.id
+                        },
+                    ],
+                    function(err) {
+                        if (err) throw err;
+                        console.log("Employee updated successfully!");
+                        start();
+                      }
+                );
+            })
+    })
 };
