@@ -57,7 +57,7 @@ function viewPrompt() {
             choices: ["DEPARTMENTS", "ROLES", "EMPLOYEES", "BACK"]
         })
         .then(function (answer) {
-            // based on their answer, either call the bid or the post functions
+            // based on their answer view respective tables
             if (answer.viewList === "DEPARTMENTS") {
                 viewDepartments();
             }
@@ -100,5 +100,128 @@ function viewEmployees() {
 
 
 // Add to tables
-function addPrompt() { };
+function addPrompt() {
+    inquirer
+        .prompt({
+            name: "addList",
+            type: "list",
+            message: "Would you like to add to departments, roles or employees?",
+            choices: ["DEPARTMENTS", "ROLES", "EMPLOYEES", "BACK"]
+        })
+        .then(function (answer) {
+            // based on their answer add to respective tables
+            if (answer.addList === "DEPARTMENTS") {
+                addDepartments();
+            }
+            else if (answer.addList === "ROLES") {
+                addRoles();
+            }
+            else if (answer.addList === "EMPLOYEES") {
+                addEmployees();
+            }
+            else {
+                start();
+            }
+        });
+};
 
+// Add to departments table
+function addDepartments() {
+    inquirer
+        .prompt(
+            {
+                name: "name",
+                type: "input",
+                message: "What is the new department name?"
+            }
+        )
+        .then(function (answer) {
+            connection.query("INSERT INTO departments SET ?",
+                {
+                    name: answer.name
+                },
+                function (err) {
+                    if (err) throw err;
+                    console.log("New department added successfully.");
+                    start();
+                })
+        })
+
+};
+
+// Add to roles table
+function addRoles() {
+    inquirer
+        .prompt([
+            {
+                name: "title",
+                type: "input",
+                message: "What is the title of the new role?"
+            },
+            {
+                name: "salary",
+                type: "input",
+                message: "What is the salary of the new role?"
+            },
+            {
+                name: "departmentId",
+                type: "input",
+                message: "What is the department ID of the new role?"
+            }
+        ])
+        .then(function (answer) {
+            connection.query("INSERT INTO roles SET ?",
+                {
+                    title: answer.title,
+                    salary: answer.salary,
+                    department_id: answer.departmentId,
+                },
+                function (err) {
+                    if (err) throw err;
+                    console.log("New role added successfully.");
+                    start();
+                })
+        })
+
+};
+
+// Add to employees table
+function addEmployees() {
+    inquirer
+        .prompt([
+            {
+                name: "firstName",
+                type: "input",
+                message: "What is the first name of the new employee?"
+            },
+            {
+                name: "lastName",
+                type: "input",
+                message: "What is the last name of the new employee?"
+            },
+            {
+                name: "roleId",
+                type: "input",
+                message: "What is the role ID of the new employee?"
+            },
+            {
+                name: "managerId",
+                type: "input",
+                message: "What is the manager ID of the new employee?"
+            }
+        ])
+        .then(function (answer) {
+            connection.query("INSERT INTO employees SET ?",
+                {
+                    first_name: answer.firstName,
+                    last_name: answer.lastName,
+                    role_id: answer.roleId,
+                    manager_id: answer.managerId
+                },
+                function (err) {
+                    if (err) throw err;
+                    console.log("New employee added successfully.");
+                    start();
+                })
+        })
+};
