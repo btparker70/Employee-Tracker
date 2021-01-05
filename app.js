@@ -55,6 +55,7 @@ function start() {
             else if (answer.optionList === "VIEW DEPARTMENT BUDGET") {
                 viewDepartmentBudget();
             } else {
+                console.log("Program terminated");
                 connection.end();
             }
         });
@@ -91,7 +92,8 @@ function viewPrompt() {
 function viewDepartments() {
     connection.query("SELECT * FROM departments", function (err, results) {
         if (err) throw err;
-        console.table(results)
+        console.table(results);
+        viewGoBack();
     })
 };
 
@@ -99,7 +101,8 @@ function viewDepartments() {
 function viewRoles() {
     connection.query("SELECT * FROM roles", function (err, results) {
         if (err) throw err;
-        console.table(results)
+        console.table(results);
+        viewGoBack();
     })
 };
 
@@ -108,6 +111,7 @@ function viewEmployees() {
     connection.query("SELECT * FROM employees", function (err, results) {
         if (err) throw err;
         console.table(results)
+        viewGoBack();
     })
 };
 
@@ -156,7 +160,7 @@ function addDepartments() {
                 function (err) {
                     if (err) throw err;
                     console.log("New department added successfully.");
-                    start();
+                    addGoBack();
                 })
         })
 
@@ -192,7 +196,7 @@ function addRoles() {
                 function (err) {
                     if (err) throw err;
                     console.log("New role added successfully.");
-                    start();
+                    addGoBack();
                 })
         })
 
@@ -234,7 +238,7 @@ function addEmployees() {
                 function (err) {
                     if (err) throw err;
                     console.log("New employee added successfully.");
-                    start();
+                    addGoBack();
                 })
         })
 };
@@ -313,7 +317,7 @@ function updateDepartments() {
                     function (err) {
                         if (err) throw err;
                         console.log("Department updated successfully!");
-                        start();
+                        updateGoBack();
                     }
                 );
             })
@@ -379,7 +383,7 @@ function updateRoles() {
                     function (err) {
                         if (err) throw err;
                         console.log("Role updated successfully!");
-                        start();
+                        updateGoBack();
                     }
                 );
             })
@@ -454,7 +458,7 @@ function updateEmployees() {
                     function (err) {
                         if (err) throw err;
                         console.log("Employee updated successfully!");
-                        start();
+                        updateGoBack();
                     }
                 );
             })
@@ -534,7 +538,7 @@ function deleteDepartments() {
                         function (err) {
                             if (err) throw err;
                             console.log("Department deleted successfully!");
-                            start();
+                            deleteGoBack();
                         }
                     );
                 }
@@ -589,7 +593,7 @@ function deleteRoles() {
                         function (err) {
                             if (err) throw err;
                             console.log("Role deleted successfully!");
-                            start();
+                            deleteGoBack();
                         }
                     );
                 }
@@ -646,7 +650,7 @@ function deleteEmployees() {
                         function (err) {
                             if (err) throw err;
                             console.log("Employee deleted successfully!");
-                            start();
+                            deleteGoBack();
                         }
                     );
                 }
@@ -680,9 +684,10 @@ function managerViewPrompt() {
 
 // View all employees sorted by manager
 function managerViewAll() {
-    connection.query("SELECT * FROM employees ORDER BY -manager_id DESC, id DESC", function (err, results) {
+    connection.query("SELECT * FROM employees ORDER BY -manager_id DESC, id ASC", function (err, results) {
         if (err) throw err;
         console.table(results)
+        managerViewAllGoBack();
     })
 };
 
@@ -738,6 +743,117 @@ function viewDepartmentBudget() {
     })
 };
 
+//////// GO BACK FUNCTIONS ////////
+// View go back
+function viewGoBack() {
+    inquirer
+        .prompt(
+            {
+                name: "choice",
+                type: "list",
+                choices: ["BACK", "MAIN"],
+                message: "Proceed:"
+            }
+        )
+        .then(function(answer) {
+            switch (answer.choice) {
+                case "BACK":
+                    viewPrompt();
+                    break;
+                case "MAIN":
+                    start();
+                    break;
+            }
+        })
+}
+// Add go back
+function addGoBack() {
+    inquirer
+        .prompt(
+            {
+                name: "choice",
+                type: "list",
+                choices: ["BACK", "MAIN"],
+                message: "Proceed:"
+            }
+        )
+        .then(function(answer) {
+            switch (answer.choice) {
+                case "BACK":
+                    addPrompt();
+                    break;
+                case "MAIN":
+                    start();
+                    break;
+            }
+        })
+}
+// Update go back
+function updateGoBack() {
+    inquirer
+        .prompt(
+            {
+                name: "choice",
+                type: "list",
+                choices: ["BACK", "MAIN"],
+                message: "Proceed:"
+            }
+        )
+        .then(function(answer) {
+            switch (answer.choice) {
+                case "BACK":
+                    updatePrompt();
+                    break;
+                case "MAIN":
+                    start();
+                    break;
+            }
+        })
+}
+// Delete go back
+function deleteGoBack() {
+    inquirer
+        .prompt(
+            {
+                name: "choice",
+                type: "list",
+                choices: ["BACK", "MAIN"],
+                message: "Proceed:"
+            }
+        )
+        .then(function(answer) {
+            switch (answer.choice) {
+                case "BACK":
+                    deletePrompt();
+                    break;
+                case "MAIN":
+                    start();
+                    break;
+            }
+        })
+}
+// Manager view go back
+function managerViewAllGoBack() {
+    inquirer
+        .prompt(
+            {
+                name: "choice",
+                type: "list",
+                choices: ["BACK", "MAIN"],
+                message: "Proceed:"
+            }
+        )
+        .then(function(answer) {
+            switch (answer.choice) {
+                case "BACK":
+                    managerViewPrompt();
+                    break;
+                case "MAIN":
+                    start();
+                    break;
+            }
+        })
+}
 // Department Budget go back
 function viewDepartmentBudgetGoBack() {
     inquirer
@@ -761,3 +877,4 @@ function viewDepartmentBudgetGoBack() {
         })
 }
 
+// add cancel to delete
