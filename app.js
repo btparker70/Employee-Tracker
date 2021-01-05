@@ -685,7 +685,7 @@ function managerViewPrompt() {
 
 // View all employees sorted by manager
 function managerViewAll() {
-    connection.query("SELECT * FROM employees ORDER BY -manager_id DESC, id ASC", function (err, results) {
+    connection.query("SELECT e.id, e.first_name, e.last_name, CONCAT(m.first_name, ' ', m.last_name) AS manager FROM employees e LEFT JOIN employees m ON m.id=e.manager_id ORDER BY -e.manager_id DESC, id ASC", function (err, results) {
         if (err) throw err;
         console.table(results)
         managerViewAllGoBack();
