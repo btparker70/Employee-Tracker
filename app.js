@@ -32,8 +32,8 @@ function start() {
         .prompt({
             name: "optionList",
             type: "list",
-            message: "Would you like to view, add or update?",
-            choices: ["VIEW", "ADD", "UPDATE", "EXIT"]
+            message: "Would you like to view, add, update or delete?",
+            choices: ["VIEW", "ADD", "UPDATE", "DELETE", "EXIT"]
         })
         .then(function (answer) {
             // based on their answer, either call the bid or the post functions
@@ -45,6 +45,9 @@ function start() {
             }
             else if (answer.optionList === "UPDATE") {
                 updatePrompt();
+            }
+            else if (answer.optionList === "DELETE") {
+                deletePrompt();
             } else {
                 connection.end();
             }
@@ -301,11 +304,11 @@ function updateDepartments() {
                             id: chosenDeptartment.id
                         }
                     ],
-                    function(err) {
+                    function (err) {
                         if (err) throw err;
                         console.log("Department updated successfully!");
                         start();
-                      }
+                    }
                 );
             })
     })
@@ -367,11 +370,11 @@ function updateRoles() {
                             id: chosenRole.id
                         }
                     ],
-                    function(err) {
+                    function (err) {
                         if (err) throw err;
                         console.log("Role updated successfully!");
                         start();
-                      }
+                    }
                 );
             })
     })
@@ -442,12 +445,205 @@ function updateEmployees() {
                             id: chosenEmployee.id
                         },
                     ],
-                    function(err) {
+                    function (err) {
                         if (err) throw err;
                         console.log("Employee updated successfully!");
                         start();
-                      }
+                    }
                 );
+            })
+    })
+};
+
+//////// DELETE ////////
+function deletePrompt() {
+    inquirer
+        .prompt({
+            name: "deleteList",
+            type: "list",
+            message: "Would you like to make deletions from departments, roles or employees?",
+            choices: ["DEPARTMENTS", "ROLES", "EMPLOYEES", "BACK"]
+        })
+        .then(function (answer) {
+            // based on their answer add to respective tables
+            if (answer.deleteList === "DEPARTMENTS") {
+                deleteDepartments();
+            }
+            else if (answer.deleteList === "ROLES") {
+                deleteRoles();
+            }
+            else if (answer.deleteList === "EMPLOYEES") {
+                deleteEmployees();
+            }
+            else {
+                start();
+            }
+        });
+};
+
+// Delete departments table
+function deleteDepartments() {
+    connection.query("SELECT * FROM departments", function (err, results) {
+        if (err) throw err;
+
+        // Choose which department to delete from the list of all departments
+        inquirer
+            .prompt([
+                {
+                    name: "choice",
+                    type: "rawlist",
+                    choices: function () {
+                        var choiceArray = [];
+                        for (i = 0; i < results.length; i++) {
+                            choiceArray.push(results[i].name);
+                        }
+                        return choiceArray;
+                    },
+                    message: "Which department would you like to delete?"
+                },
+                {
+                    name: "confirm",
+                    type: "list",
+                    choices: ["NO", "YES"],
+                    message: "Are you sure you want to delete this department?"
+                }
+            ])
+            .then(function (answer) {
+                // If NO selected, go back
+                if (answer.confirm === "NO") {
+                    deleteDepartments();
+                } else {
+                    // Get the id of the chosen department
+                    var chosenDeptartment;
+                    for (var i = 0; i < results.length; i++) {
+                        if (results[i].name === answer.choice) {
+                            chosenDeptartment = results[i];
+                        }
+                    }
+                    // Update the table with the changes
+                    connection.query("DELETE FROM departments WHERE ?",
+                        {
+                            id: chosenDeptartment.id
+                        },
+                        function (err) {
+                            if (err) throw err;
+                            console.log("Department deleted successfully!");
+                            start();
+                        }
+                    );
+                }
+            })
+    })
+};
+
+// Delete roles table
+function deleteRoles() {
+    connection.query("SELECT * FROM roles", function (err, results) {
+        if (err) throw err;
+
+        // Choose which role to delete from the list of all roles
+        inquirer
+            .prompt([
+                {
+                    name: "choice",
+                    type: "rawlist",
+                    choices: function () {
+                        var choiceArray = [];
+                        for (i = 0; i < results.length; i++) {
+                            choiceArray.push(results[i].title);
+                        }
+                        return choiceArray;
+                    },
+                    message: "Which role would you like to delete?"
+                },
+                {
+                    name: "confirm",
+                    type: "list",
+                    choices: ["NO", "YES"],
+                    message: "Are you sure you want to delete this role?"
+                }
+            ])
+            .then(function (answer) {
+                // If NO selected, go back
+                if (answer.confirm === "NO") {
+                    deleteRoles();
+                } else {
+                    // Get the id of the chosen role
+                    var chosenRole;
+                    for (var i = 0; i < results.length; i++) {
+                        if (results[i].title === answer.choice) {
+                            chosenRole = results[i];
+                        }
+                    }
+                    // Update the table with the changes
+                    connection.query("DELETE FROM roles WHERE ?",
+                        {
+                            id: chosenRole.id
+                        },
+                        function (err) {
+                            if (err) throw err;
+                            console.log("Role deleted successfully!");
+                            start();
+                        }
+                    );
+                }
+            })
+    })
+};
+
+// Delete employees table
+function deleteEmployees() {
+    connection.query("SELECT * FROM employees", function (err, results) {
+        if (err) throw err;
+
+        // Choose which employee to delete from the list of all employees
+        inquirer
+            .prompt([
+                {
+                    name: "choice",
+                    type: "rawlist",
+                    choices: function () {
+                        var choiceArray = [];
+                        for (i = 0; i < results.length; i++) {
+                            choiceArray.push(results[i].first_name + ' ' + results[i].last_name);
+                        }
+                        return choiceArray;
+                    },
+                    message: "Which emplooyee would you like to delete?"
+                },
+                {
+                    name: "confirm",
+                    type: "list",
+                    choices: ["NO", "YES"],
+                    message: "Are you sure you want to delete this employee?"
+                }
+            ])
+            .then(function (answer) {
+                // If NO selected, go back
+                if (answer.confirm === "NO") {
+                    deleteEmployees();
+                } else {
+                    // Get the id of the chosen department
+                    var chosenEmployee;
+                    // Parse only first name from the prompt
+                    var firstNameParse = answer.choice.split(" ", 1).toString();
+                    for (var i = 0; i < results.length; i++) {
+                        if (results[i].first_name === firstNameParse) {
+                            chosenEmployee = results[i];
+                        }
+                    }
+                    // Update the table with the changes
+                    connection.query("DELETE FROM employees WHERE ?",
+                        {
+                            id: chosenEmployee.id
+                        },
+                        function (err) {
+                            if (err) throw err;
+                            console.log("Employee deleted successfully!");
+                            start();
+                        }
+                    );
+                }
             })
     })
 };
