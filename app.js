@@ -730,10 +730,34 @@ function viewDepartmentBudget() {
                         results.forEach((result, index) => {
                             budget += results[index].salary;
                         })
-                        console.log("Total department utilized budget: " + budget)
+                        console.log("Total department utilized budget: " + budget);
+                        viewDepartmentBudgetGoBack();
                     }
                 );
-
             })
     })
 };
+
+// Department Budget go back
+function viewDepartmentBudgetGoBack() {
+    inquirer
+        .prompt(
+            {
+                name: "choice",
+                type: "list",
+                choices: ["BACK", "MAIN"],
+                message: "Proceed:"
+            }
+        )
+        .then(function(answer) {
+            switch (answer.choice) {
+                case "BACK":
+                    viewDepartmentBudget()
+                    break;
+                case "MAIN":
+                    start();
+                    break;
+            }
+        })
+}
+
