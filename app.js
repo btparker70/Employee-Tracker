@@ -688,46 +688,52 @@ function managerViewAll() {
 
 //////// VIEW DEPARTMENT BUDGET ////////
 // View total utilized budget of a specific department
-// function viewDepartmentBudget() {
-//     connection.query("SELECT * FROM departments", function (err, results) {
-//         if (err) throw err;
+function viewDepartmentBudget() {
+    connection.query("SELECT * FROM departments", function (err, results) {
+        if (err) throw err;
 
-//         // Choose which department to view from the list of all departments
-//         inquirer
-//             .prompt(
-//                 {
-//                     name: "choice",
-//                     type: "rawlist",
-//                     choices: function () {
-//                         var choiceArray = [];
-//                         for (i = 0; i < results.length; i++) {
-//                             choiceArray.push(results[i].name);
-//                         }
-//                         return choiceArray;
-//                     },
-//                     message: "Which department would you like to view?"
-//                 }
-//             )
-//             .then(function (answer) {
-//                 // Get the id of the chosen department
-//                 var chosenDeptartment;
-//                 for (var i = 0; i < results.length; i++) {
-//                     if (results[i].name === answer.choice) {
-//                         chosenDeptartment = results[i];
-//                     }
-//                 }
-//                 // Update the table with the changes
-//                 connection.query("DELETE FROM departments WHERE ?",
-//                     {
-//                         id: chosenDeptartment.id
-//                     },
-//                     function (err) {
-//                         if (err) throw err;
-//                         console.log("Department deleted successfully!");
-//                         start();
-//                     }
-//                 );
+        // Choose which department to view from the list of all departments
+        inquirer
+            .prompt(
+                {
+                    name: "choice",
+                    type: "rawlist",
+                    choices: function () {
+                        var choiceArray = [];
+                        for (i = 0; i < results.length; i++) {
+                            choiceArray.push(results[i].name);
+                        }
+                        return choiceArray;
+                    },
+                    message: "Which department would you like to view?"
+                }
+            )
+            .then(function (answer) {
+                // Get the id of the chosen department
+                var chosenDeptartment;
+                for (var i = 0; i < results.length; i++) {
+                    if (results[i].name === answer.choice) {
+                        chosenDeptartment = results[i];
+                    }
+                }
+                // Update the table with the changes
+                connection.query("SELECT employees.role_id, employees.first_name, roles.salary, roles.department_id FROM employees INNER JOIN roles ON roles.id=employees.role_id WHERE ?",
+                    {
+                        department_id: chosenDeptartment.id
+                    },
+                    function (err, results) {
+                        if (err) throw err;
+                        // Print the table
+                        console.table(results);
+                        // Print the total budget
+                        var budget = 0;
+                        results.forEach((result, index) => {
+                            budget += results[index].salary;
+                        })
+                        console.log("Total department utilized budget: " + budget)
+                    }
+                );
 
-//             })
-//     })
-// };
+            })
+    })
+};

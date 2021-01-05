@@ -2,7 +2,7 @@
 INSERT INTO departments (name)
 VALUES ("Sales"), ("Engineering"), ("Legal"), ("Finance");
 
--- Insert departments into the department table
+-- Insert roles into the roles table
 INSERT INTO roles (title, salary, department_id)
 VALUES ("Lead Salesperson", 80000, 1), 
     ("Junior Salesperson", 50000, 1),
@@ -12,7 +12,7 @@ VALUES ("Lead Salesperson", 80000, 1),
     ("Paralegal", 110000, 3), 
     ("Accountant", 100000, 4);
 
--- Insert departments into the department table
+-- Insert employees into the employees table
 INSERT INTO employees (first_name, last_name, role_id, manager_id)
 VALUES ("Jack", "Sparrow", 1, null), 
     ("Hector", "Barbosa", 2, 1), 
