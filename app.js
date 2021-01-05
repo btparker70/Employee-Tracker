@@ -91,7 +91,7 @@ function viewPrompt() {
 
 // View departments table
 function viewDepartments() {
-    connection.query("SELECT * FROM departments", function (err, results) {
+    connection.query("SELECT id, departments.name AS Department FROM departments", function (err, results) {
         if (err) throw err;
         console.table(results);
         viewGoBack();
@@ -100,7 +100,7 @@ function viewDepartments() {
 
 // View roles table
 function viewRoles() {
-    connection.query("SELECT * FROM roles", function (err, results) {
+    connection.query("SELECT roles.id, roles.title, roles.salary, departments.name AS department FROM roles LEFT JOIN departments ON roles.department_id = departments.id", function (err, results) {
         if (err) throw err;
         console.table(results);
         viewGoBack();
