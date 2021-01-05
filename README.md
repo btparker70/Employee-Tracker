@@ -11,7 +11,8 @@ Thanks for visiting! My name is Brian and I am a web development student through
 # Employee-Tracker
 A command line interface application describing a company's team of employees, their departments and roles. A detailed interface provides options for viewing this information represented as tables.
 
-[![Watch the video](https://github.com/btparker70/README-Generator/blob/main/assets/images/youtubepic.png?raw=true)](https://www.youtube.com/watch?v=aq0e_wYRoJs&feature=youtu.be)
+# Video Here!
+[![Watch the video](https://github.com/btparker70/Employee-Tracker/blob/main/assets/readme/images/main.png?raw=true)](https://www.youtube.com/watch?v=Dlyst4YST58)
 
 # Table of Contents
 
@@ -26,7 +27,6 @@ https://github.com/btparker70/Employee-Tracker
 # Usage
 After installing node packages with 'npm i', run the node app with 'node ./app.js' in the terminal. You will be shown a list of options to choose from. Select the desired option to view, edit or update various areas of the company.
 
-[![Screenshot](https://github.com/btparker70/Employee-Tracker/blob/main/assets/readme/images/main.png?raw=true)
 [![Screenshot](https://github.com/btparker70/Employee-Tracker/blob/main/assets/readme/images/view.png?raw=true)
 [![Screenshot](https://github.com/btparker70/Employee-Tracker/blob/main/assets/readme/images/update.png?raw=true)
 [![Screenshot](https://github.com/btparker70/Employee-Tracker/blob/main/assets/readme/images/delete.png?raw=true)
