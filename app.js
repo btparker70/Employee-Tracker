@@ -21,6 +21,7 @@ var connection = mysql.createConnection({
 // connect to the mysql server and sql database
 connection.connect(function (err) {
     if (err) throw err;
+    // sqlAlter = "ALTER TABLE employees MODIFY COLUMN manager_id int FIRST";
     // run the start function after the connection is made to prompt the user
     start();
 });
@@ -729,6 +730,7 @@ function managerViewSpecific() {
             })
     })
 };
+
 //////// VIEW DEPARTMENT BUDGET ////////
 // View total utilized budget of a specific department
 function viewDepartmentBudget() {
@@ -760,7 +762,7 @@ function viewDepartmentBudget() {
                     }
                 }
                 // Update the table with the changes
-                connection.query("SELECT employees.role_id, employees.first_name, roles.salary, roles.department_id FROM employees INNER JOIN roles ON roles.id=employees.role_id WHERE ?",
+                connection.query("SELECT employees.first_name, employees.last_name, roles.title, roles.salary, departments.name FROM employees INNER JOIN roles ON employees.role_id=roles.id INNER JOIN departments ON roles.department_id = departments.id WHERE ?",
                     {
                         department_id: chosenDeptartment.id
                     },
@@ -938,3 +940,4 @@ function viewDepartmentBudgetGoBack() {
 }
 
 // add cancel to delete
+// 
