@@ -15,10 +15,15 @@ VALUES ("Lead Salesperson", 80000, 1),
 -- Insert employees into the employees table
 INSERT INTO employees (first_name, last_name, role_id, manager_id)
 VALUES ("Jack", "Sparrow", 1, null), 
-    ("Hector", "Barbosa", 2, 1), 
+    ("Hector", "Barbosa", 2, 1),
+    ("Carina", "Smyth", 2, 1), 
     ("Elizabeth", "Swann", 3, null), 
     ("Will", "Turner", 4, 3),
+    ("Sao", "Feng", 4, 3),
+    ("Weatherby", "Swann", 4, 3),
     ("Davy", "Jones", 5, null), 
     ("Tia", "Dalma", 6, 5),
+    ("Henry", "Turner", 6, 5),
     ("Joshamee", "Gibs", 7, null), 
-    ("James", "Norington", 7, 7);
+    ("James", "Norington", 7, 7),
+    ("Armando", "Salazar", 7, 7);

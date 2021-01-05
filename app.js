@@ -675,7 +675,7 @@ function managerViewPrompt() {
             }
             else if (answer.managerList === "SPECIFIC MANAGER") {
                 // managerViewSpecific(); Can't implement due to limitations of project manager details
-                start();
+                managerViewSpecific();
             } else {
                 start();
             }
@@ -691,6 +691,44 @@ function managerViewAll() {
     })
 };
 
+// View all employees by specific manager
+function managerViewSpecific() {
+    connection.query("SELECT * FROM employees WHERE manager_id IS NOT NULL", function (err, results) {
+        if (err) throw err;
+
+        // Choose which manager id to view by
+        inquirer
+            .prompt(
+                {
+                    name: "choice",
+                    type: "rawlist",
+                    choices: function () {
+                        var choiceArray = [];
+                        for (i = 0; i < results.length; i++) {
+                            if (choiceArray.includes(results[i].manager_id) == false) {
+                                choiceArray.push(results[i].manager_id);
+                            }
+                        }
+                        return choiceArray;
+                    },
+                    message: "Which manager would you like to view by?"
+                })
+            .then(function (answer) {
+                    // Display the employees of selected manager
+                    connection.query("SELECT * FROM employees WHERE ?",
+                        {
+                            manager_id: answer.choice
+                        },
+                        function (err, results) {
+                            if (err) throw err;
+                            console.log("Manager "+ answer.choice);
+                            console.table(results);
+                            managerViewSpecificGoBack();
+                        }
+                    );
+            })
+    })
+};
 //////// VIEW DEPARTMENT BUDGET ////////
 // View total utilized budget of a specific department
 function viewDepartmentBudget() {
@@ -834,6 +872,28 @@ function deleteGoBack() {
 }
 // Manager view go back
 function managerViewAllGoBack() {
+    inquirer
+        .prompt(
+            {
+                name: "choice",
+                type: "list",
+                choices: ["BACK", "MAIN"],
+                message: "Proceed:"
+            }
+        )
+        .then(function(answer) {
+            switch (answer.choice) {
+                case "BACK":
+                    managerViewPrompt();
+                    break;
+                case "MAIN":
+                    start();
+                    break;
+            }
+        })
+}
+// Manager view go back
+function managerViewSpecificGoBack() {
     inquirer
         .prompt(
             {
