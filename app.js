@@ -32,8 +32,8 @@ function start() {
         .prompt({
             name: "optionList",
             type: "list",
-            message: "Would you like to view, add, update or delete?",
-            choices: ["VIEW", "ADD", "UPDATE", "DELETE", "EXIT"]
+            message: "Would you like to do?",
+            choices: ["VIEW", "ADD", "UPDATE", "DELETE", "MANAGER VIEW", "VIEW DEPARTMENT BUDGET", "EXIT"]
         })
         .then(function (answer) {
             // based on their answer, either call the bid or the post functions
@@ -48,6 +48,12 @@ function start() {
             }
             else if (answer.optionList === "DELETE") {
                 deletePrompt();
+            }
+            else if (answer.optionList === "MANAGER VIEW") {
+                managerViewPrompt();
+            }
+            else if (answer.optionList === "VIEW DEPARTMENT BUDGET") {
+                viewDepartmentBudget();
             } else {
                 connection.end();
             }
@@ -647,3 +653,81 @@ function deleteEmployees() {
             })
     })
 };
+
+//////// MANAGER VIEW ////////
+// Sort employees by manager
+function managerViewPrompt() {
+    inquirer
+        .prompt({
+            name: "managerList",
+            type: "list",
+            message: "Would you like to view all employees by managers or all employees under a specific manager?",
+            choices: ["ALL", "SPECIFIC MANAGER", "BACK"]
+        })
+        .then(function (answer) {
+            // based on their answer add to respective tables
+            if (answer.managerList === "ALL") {
+                managerViewAll();
+            }
+            else if (answer.managerList === "SPECIFIC MANAGER") {
+                // managerViewSpecific(); Can't implement due to limitations of project manager details
+                start();
+            } else {
+                start();
+            }
+        });
+};
+
+// View all employees sorted by manager
+function managerViewAll() {
+    connection.query("SELECT * FROM employees ORDER BY -manager_id DESC, id DESC", function (err, results) {
+        if (err) throw err;
+        console.table(results)
+    })
+};
+
+//////// VIEW DEPARTMENT BUDGET ////////
+// View total utilized budget of a specific department
+// function viewDepartmentBudget() {
+//     connection.query("SELECT * FROM departments", function (err, results) {
+//         if (err) throw err;
+
+//         // Choose which department to view from the list of all departments
+//         inquirer
+//             .prompt(
+//                 {
+//                     name: "choice",
+//                     type: "rawlist",
+//                     choices: function () {
+//                         var choiceArray = [];
+//                         for (i = 0; i < results.length; i++) {
+//                             choiceArray.push(results[i].name);
+//                         }
+//                         return choiceArray;
+//                     },
+//                     message: "Which department would you like to view?"
+//                 }
+//             )
+//             .then(function (answer) {
+//                 // Get the id of the chosen department
+//                 var chosenDeptartment;
+//                 for (var i = 0; i < results.length; i++) {
+//                     if (results[i].name === answer.choice) {
+//                         chosenDeptartment = results[i];
+//                     }
+//                 }
+//                 // Update the table with the changes
+//                 connection.query("DELETE FROM departments WHERE ?",
+//                     {
+//                         id: chosenDeptartment.id
+//                     },
+//                     function (err) {
+//                         if (err) throw err;
+//                         console.log("Department deleted successfully!");
+//                         start();
+//                     }
+//                 );
+
+//             })
+//     })
+// };
