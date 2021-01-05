@@ -716,7 +716,7 @@ function managerViewSpecific() {
                 })
             .then(function (answer) {
                     // Display the employees of selected manager
-                    connection.query("SELECT * FROM employees WHERE ?",
+                    connection.query("SELECT e.id, e.first_name, e.last_name, CONCAT(m.first_name, ' ', m.last_name) AS manager FROM employees e LEFT JOIN employees m ON m.id=e.manager_id WHERE e.?",
                         {
                             manager_id: answer.choice
                         },
