@@ -12,7 +12,7 @@ Thanks for visiting! My name is Brian and I am a web development student through
 A command line interface application describing a company's team of employees, their departments and roles. A detailed interface provides options for viewing this information represented as tables.
 
 # Video Here!
-[![Watch the video](https://github.com/btparker70/Employee-Tracker/blob/main/assets/readme/images/main.png?raw=true)](https://www.youtube.com/watch?v=Dlyst4YST58)
+[![Watch the video](https://github.com/btparker70/Employee-Tracker/blob/main/assets/readme/images/videoimage.png?raw=true)](https://www.youtube.com/watch?v=Dlyst4YST58)
 
 # Table of Contents
 
