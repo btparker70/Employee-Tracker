@@ -109,13 +109,13 @@ function viewRoles() {
 
 // View employees table
 function viewEmployees() {
-    connection.query("SELECT * FROM employees", function (err, results) {
+    connection.query("SELECT e.id, e.first_name, e.last_name, roles.title, roles.salary, departments.name AS department, CONCAT(m.first_name, ' ', m.last_name) AS manager FROM employees e LEFT JOIN employees m ON e.manager_id=m.id INNER JOIN roles ON e.role_id = roles.id INNER JOIN departments ON roles.department_id = departments.id ORDER BY e.id", function (err, results) {
         if (err) throw err;
         console.table(results)
         viewGoBack();
     })
 };
-
+// 
 //////// ADD ////////
 // Add to tables
 function addPrompt() {
