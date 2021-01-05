@@ -762,7 +762,7 @@ function viewDepartmentBudget() {
                     }
                 }
                 // Update the table with the changes
-                connection.query("SELECT employees.first_name, employees.last_name, roles.title, roles.salary, departments.name FROM employees INNER JOIN roles ON employees.role_id=roles.id INNER JOIN departments ON roles.department_id = departments.id WHERE ?",
+                connection.query("SELECT departments.name AS department, employees.first_name, employees.last_name, roles.title, roles.salary FROM employees INNER JOIN roles ON employees.role_id=roles.id INNER JOIN departments ON roles.department_id = departments.id WHERE ?",
                     {
                         department_id: chosenDeptartment.id
                     },
